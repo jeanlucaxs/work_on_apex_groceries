@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Apex Groceries</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+<style>
+body { font-family: Arial, sans-serif; margin: 20px; }
+.question { margin-bottom: 15px; }
+.option { margin-left: 20px; }
+textarea { width: 100%; height: 100px; }
+</style>
+</head>
+<body>
+
+<h2>Apex Groceries</h2>
+
+<label>Nome: <input type="text" id="nome"></label><br><br>
+<label>Idade: <input type="number" id="idade"></label><br><br>
+
+<form id="quizForm"></form>
+
+<button onclick="gerarTexto()">Gerar Resposta</button>
+
+<h3>Gabarito:</h3>
+<textarea id="resultado" readonly></textarea>
+
+<script>
+const perguntas = [
+    "1. Como você deve cumprimentar os clientes?",
+    "2. O que fazer se houver um conflito entre jogadores?",
+    "3. O que é proibido permitir no caixa?",
+    "4. Como deve manter seu posto?",
+    "5. O que fazer se um cliente estiver irritado?",
+    "6. Como lidar com erros no sistema de pagamento?",
+    "7. O que fazer se dois jogadores discutirem?",
+    "8. Como manter a atenção ao registrar os itens?",
+    "9. Como deve ser a comunicação com colegas?",
+    "10. Por que é importante seguir as regras?",
+    "11. O que fazer se houver demora na fila?",
+    "12. Como agir se houver cliente confuso sobre preço?",
+    "13. O que fazer se um item não estiver no estoque?",
+    "14. Como deve finalizar a venda corretamente?",
+    "15. Qual é a prioridade no atendimento ao cliente?"
+];
+
+const alternativas = [
+    ["Ignorando-os","Cumprimentando cordialmente","Apenas acenando","Falando rápido","Pedindo para saírem"], // b
+    ["Tentar resolver sozinho","Ignorar","Brigar","Chamar supervisor ou admin","Bloquear jogador"], // d
+    ["Passar itens sem pagar","Perguntas sobre produtos","Uso de carrinho","Troca de produtos","Oferecer desconto"], // c
+    ["Jogar objetos de lado","Limpo e organizado","Apenas atento aos itens","Chamar atenção","Ignorar bagunça"], // e
+    ["Escutar e manter a paciência","Responder ríspido","Ignorar","Fechar caixa","Chamar outro jogador"], // a
+    ["Ignorar","Corrigir e informar cliente","Bloquear cliente","Reiniciar jogo","Reclamar"], // d
+    ["Ignorar discussão","Separar clientes com força","Acalmar e chamar supervisor","Sair do posto","Bloquear ambos"], // d
+    ["Prestar atenção nos detalhes","Registrar rápido sem conferir","Pedir ajuda sem tentar","Deixar clientes aguardarem","Ignorar erros"], // e
+    ["Ignorar colegas","Gritar instruções","Falar educadamente e claro","Falar só com amigos","Reclamar de colegas"], // c
+    ["Apenas cobrar itens","Garantir ordem e justiça","Ignorar regras","Fazer o que quiser","Deixar clientes resolverem sozinhos"], // b
+    ["Ignorar","Organizar fila e informar clientes","Atender apenas alguns","Fechar caixa","Reclamar"], // b
+    ["Dar desconto sem motivo","Explicar e corrigir","Ignorar cliente","Bloquear cliente","Chamar outro jogador"], // b
+    ["Informar supervisor","Inventar quantidade","Ignorar","Fechar caixa","Empurrar itens"], // d
+    ["Entregar sem conferir","Conferir itens e entregar recibo","Ignorar cliente","Deixar itens no chão","Apenas dizer 'ok'"], // a
+    ["Prioridade é o cliente","Prioridade é o supervisor","Prioridade é o colega","Prioridade é o jogo","Prioridade é o estoque"] // a
+];
+
+const form = document.getElementById("quizForm");
+
+perguntas.forEach((p, i) => {
+    const div = document.createElement("div");
+    div.className = "question";
+    const q = document.createElement("p");
+    q.innerText = p;
+    div.appendChild(q);
+
+    alternativas[i].forEach((alt, j) => {
+        const label = document.createElement("label");
+        label.className = "option";
+        const radio = document.createElement("input");
+        radio.type = "radio";
+        radio.name = "q"+i;
+        radio.value = String.fromCharCode(97+j);
+        label.appendChild(radio);
+        label.appendChild(document.createTextNode(" " + alt));
+        div.appendChild(label);
+        div.appendChild(document.createElement("br"));
+    });
+
+    form.appendChild(div);
+});
+
+function gerarTexto(){
+    const nome = document.getElementById("nome").value.trim();
+    const idade = document.getElementById("idade").value.trim();
+    if(!nome || !idade){ alert("Preencha nome e idade."); return; }
+
+    let respostas = "";
+    for(let i=0;i<15;i++){
+        const radios = document.getElementsByName("q"+i);
+        let marcado = null;
+        radios.forEach(r => { if(r.checked) marcado = r.value; });
+        if(!marcado){ alert(`Marque uma resposta para a pergunta ${i+1}`); return; }
+        respostas += marcado;
+    }
+
+    const texto = `nome=${nome}idade=${idade}respostas=${respostas}`;
+    const encrypted = CryptoJS.AES.encrypt(texto, "OI").toString();
+
+    document.getElementById("resultado").value = encrypted;
+}
+</script>
+
+</body>
+</html>
