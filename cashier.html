@@ -1,68 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Apex Groceries - Export Answers</title>
-  <script src="https:                                                                            
-  <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    .question { margin-bottom: 15px; }
-    .option { margin-left: 20px; }
-    textarea { width: 100%; height: 100px; }
-  </style>
+<meta charset="UTF-8">
+<title>Apex Groceries</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+<style>
+body { font-family: Arial, sans-serif; margin: 20px; }
+.question { margin-bottom: 15px; }
+.option { margin-left: 20px; }
+textarea { width: 100%; height: 100px; }
+</style>
 </head>
 <body>
-  <h2>Apex Groceries</h2>
-  <label>Name: <input type="text" id="nome"></label><br><br>
-  <label>Age: <input type="number" id="idade"></label><br><br>
-  <form id="quizForm"></form>
-  <button onclick="gerarTexto()">Export Answers</button>
-  <h3>Answers:</h3>
-  <textarea id="resultado" readonly></textarea>
-  <script>
-    const perguntas = [
-      "1. How should you greet customers?",
-      "2. What to do if there's a conflict between players?",
-      "3. What is forbidden to allow at the checkout?",
-      "4. How should you keep your station?",
-      "5. What to do if a customer is upset?",
-      "6. How to handle payment system errors?",
-      "7. What to do if two players argue?",
-      "8. How to stay focused when registering items?",
-      "9. How should communication with colleagues be?",
-      "10. Why is it important to follow rules?",
-      "11. What to do if there's a delay in the queue?",
-      "12. How to act if a customer is confused about price?",
-      "13. What to do if an item is out of stock?",
-      "14. How to finalize a sale correctly?",
-      "15. What is the priority in customer service?"
-    ];
-    const alternativas = [
-      ["Ignore them","Greet cordially","Just wave","Speak quickly","Ask them to leave"],
-      ["Try to resolve alone","Ignore","Fight","Call supervisor or admin","Block player"],
-      ["Pass items without paying","Ask about products","Use of cart","Exchange products","Offer discount"],
-      ["Throw objects aside","Clean and organized","Just pay attention to items","Call attention","Ignore mess"],
-      ["Listen and keep patience","Respond sharply","Ignore","Close checkout","Call another player"],
-      ["Ignore","Correct and inform customer","Block customer","Restart game","Complain"],
-      ["Ignore discussion","Separate customers forcefully","Calm down and call supervisor","Leave the station","Block both"],
-      ["Pay attention to details","Register quickly without checking","Ask for help without trying","Let customers wait","Ignore errors"],
-      ["Ignore colleagues","Shout instructions","Speak politely and clearly","Talk only with friends","Complain about colleagues"],
-      ["Just charge items","Ensure order and fairness","Ignore rules","Do whatever","Let customers resolve alone"],
-      ["Ignore","Organize queue and inform customers","Serve only some","Close checkout","Complain"],
-      ["Give discount without reason","Explain and correct","Ignore customer","Block customer","Call another player"],
-      ["Inform supervisor","Make up quantity","Ignore","Close checkout","Push items"],
-      ["Deliver without checking","Check items and deliver receipt","Ignore customer","Leave items on the floor","Just say 'ok'"],
-      ["Priority is the customer","Priority is the supervisor","Priority is the colleague","Priority is the game","Priority is the stock"]
-    ];
 
-    const form = document.getElementById("quizForm");
-    perguntas.forEach((p, i) => {
-      const div = document.createElement("div");
-      div.className = "question";
-      const q = document.createElement("p");
-      q.innerText = p;
-      div.appendChild(q);
-      alternativas[i].forEach((alt, j) => {
+<h2>Apex Groceries</h2>
+
+<label>Name: <input type="text" id="nome"></label><br><br>
+<label>Age: <input type="number" id="idade"></label><br><br>
+
+<form id="quizForm"></form>
+
+<button onclick="gerarTexto()">Export Answers</button>
+
+<h3>Answers:</h3>
+<textarea id="resultado" readonly></textarea>
+
+<script>
+const perguntas = [
+    "1. How should you greet customers?",
+    "2. What should you do if there is a conflict between players?",
+    "3. What is forbidden to allow at the checkout?",
+    "4. How should you keep your workstation?",
+    "5. What should you do if a customer is irritated?",
+    "6. How should you handle payment system errors?",
+    "7. What should you do if two players argue?",
+    "8. How do you stay focused while scanning items?",
+    "9. How should communication with coworkers be?",
+    "10. Why is it important to follow the rules?",
+    "11. What should you do if there is a long line?",
+    "12. How should you act if a customer is confused about a price?",
+    "13. What should you do if an item is out of stock?",
+    "14. How should you properly finalize a sale?",
+    "15. What is the priority in customer service?"
+];
+
+const alternativas = [
+    ["Ignoring them","Greeting them politely","Just waving","Speaking quickly","Asking them to leave"],
+    ["Try to solve it alone","Ignore it","Argue","Call a supervisor or admin","Block the player"],
+    ["Let items pass without payment","Product questions","Use of a cart","Product exchange","Offering discounts"],
+    ["Throwing items aside","Clean and organized","Just paying attention to items","Drawing attention","Ignoring the mess"],
+    ["Listen and stay patient","Respond rudely","Ignore","Close the register","Call another player"],
+    ["Ignore it","Fix it and inform the customer","Block the customer","Restart the game","Complain"],
+    ["Ignore the argument","Separate customers by force","Calm them down and call a supervisor","Leave the station","Block both"],
+    ["Pay attention to details","Scan quickly without checking","Ask for help without trying","Make customers wait","Ignore mistakes"],
+    ["Ignore coworkers","Shout instructions","Speak politely and clearly","Talk only to friends","Complain about coworkers"],
+    ["Just charge items","Ensure order and fairness","Ignore rules","Do whatever you want","Let customers solve things themselves"],
+    ["Ignore it","Organize the line and inform customers","Serve only some people","Close the register","Complain"],
+    ["Give a discount for no reason","Explain and correct","Ignore the customer","Block the customer","Call another player"],
+    ["Inform a supervisor","Make up a quantity","Ignore it","Close the register","Push items"],
+    ["Hand over items without checking","Check items and give the receipt","Ignore the customer","Leave items on the floor","Just say 'ok'"],
+    ["The customer is the priority","The supervisor is the priority","Coworkers are the priority","The game is the priority","Stock is the priority"]
+];
+
+const form = document.getElementById("quizForm");
+
+perguntas.forEach((p, i) => {
+    const div = document.createElement("div");
+    div.className = "question";
+    const q = document.createElement("p");
+    q.innerText = p;
+    div.appendChild(q);
+
+    alternativas[i].forEach((alt, j) => {
         const label = document.createElement("label");
         label.className = "option";
         const radio = document.createElement("input");
@@ -73,34 +82,37 @@
         label.appendChild(document.createTextNode(" " + alt));
         div.appendChild(label);
         div.appendChild(document.createElement("br"));
-      });
-      form.appendChild(div);
     });
 
-    function gerarTexto(){
-      const nome = document.getElementById("nome").value.trim();
-      const idade = document.getElementById("idade").value.trim();
-      if(!nome || !idade){
-        alert("Fill in name and age.");
-        return;
-      }
-      let respostas = "";
-      for(let i=0;i<15;i++){
+    form.appendChild(div);
+});
+
+function gerarTexto(){
+    const nome = document.getElementById("nome").value.trim();
+    const idade = document.getElementById("idade").value.trim();
+    if(!nome || !idade){ 
+        alert("Fill in name and age."); 
+        return; 
+    }
+
+    let respostas = "";
+    for(let i=0;i<15;i++){
         const radios = document.getElementsByName("q"+i);
         let marcado = null;
-        radios.forEach(r => {
-          if(r.checked) marcado = r.value;
-        });
-        if(!marcado){
-          alert(`Mark an answer for question ${i+1}`);
-          return;
+        radios.forEach(r => { if(r.checked) marcado = r.value; });
+        if(!marcado){ 
+            alert(`Select an answer for question ${i+1}`); 
+            return; 
         }
         respostas += marcado;
-      }
-      const texto = `name=${nome}age=${idade}respostas=${respostas}`;
-      const encrypted = CryptoJS.AES.encrypt(texto, "OI").toString();
-      document.getElementById("resultado").value = encrypted;
     }
-  </script>
+
+    const texto = `name=${nome}age=${idade}answers=${respostas}`;
+    const encrypted = CryptoJS.AES.encrypt(texto, "OI").toString();
+
+    document.getElementById("resultado").value = encrypted;
+}
+</script>
+
 </body>
 </html>
