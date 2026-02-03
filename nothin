@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Doação de Robux</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #0f172a;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+
+  .box {
+    background: #020617;
+    padding: 20px;
+    border-radius: 12px;
+    width: 320px;
+    text-align: center;
+  }
+
+  input, button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 8px;
+    border-radius: 8px;
+    border: none;
+  }
+
+  button {
+    background: #22c55e;
+    color: black;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  button.confirm {
+    background: #38bdf8;
+  }
+
+  img {
+    width: 150px;
+    margin: 10px auto;
+    display: block;
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  .error {
+    color: #f87171;
+  }
+
+  .success {
+    color: #4ade80;
+  }
+</style>
+</head>
+<body>
+
+<div class="box">
+  <h2>Enviar Robux</h2>
+
+  <input id="username" placeholder="Nome do usuário">
+  <button onclick="buscarUsuario()">Buscar</button>
+
+  <p id="erro" class="error"></p>
+
+  <div id="perfil" class="hidden">
+    <img id="avatar">
+    <h3 id="nome"></h3>
+
+    <label>Robux para doar</label>
+    <input id="valor" type="number" placeholder="Ex: 100">
+
+    <button onclick="confirmar()">Enviar</button>
+  </div>
+
+  <div id="confirmacao" class="hidden">
+    <p class="success" id="msg"></p>
+    <button class="confirm" onclick="resetar()">OK</button>
+  </div>
+</div>
+
+<script>
+let usuarioAtual = "";
+
+async function buscarUsuario() {
+  const nome = document.getElementById("username").value.trim();
+  document.getElementById("erro").innerText = "";
+
+  if (!nome) return;
+
+  try {
+    const res = await fetch("https://users.roblox.com/v1/usernames/users", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        usernames: [nome],
+        excludeBannedUsers: false
+      })
+    });
+
+    const data = await res.json();
+
+    if (!data.data.length) {
+      document.getElementById("erro").innerText = "Usuário não encontrado";
+      return;
+    }
+
+    const userId = data.data[0].id;
+    usuarioAtual = nome;
+
+    const avatarRes = await fetch(
+      `https://thumbnails.roblox.com/v1/users/avatar-bust?userIds=${userId}&size=420x420&format=Png`
+    );
+    const avatarData = await avatarRes.json();
+
+    document.getElementById("avatar").src = avatarData.data[0].imageUrl;
+    document.getElementById("nome").innerText = nome;
+
+    document.getElementById("perfil").classList.remove("hidden");
+
+  } catch {
+    document.getElementById("erro").innerText = "Erro ao conectar com o Roblox";
+  }
+}
+
+function confirmar() {
+  const valor = document.getElementById("valor").value;
+
+  if (!valor || valor <= 0) return;
+
+  document.getElementById("perfil").classList.add("hidden");
+  document.getElementById("confirmacao").classList.remove("hidden");
+  document.getElementById("msg").innerText =
+    `${valor} Robux enviados para ${usuarioAtual} (simulação)`;
+}
+
+function resetar() {
+  document.getElementById("username").value = "";
+  document.getElementById("valor").value = "";
+  document.getElementById("confirmacao").classList.add("hidden");
+  document.getElementById("perfil").classList.add("hidden");
+}
+</script>
+
+</body>
+</html>
